@@ -151,6 +151,26 @@
           "volumeSuffix": "cl"
         },
         "time": "2022-04-29 12:30"
+      },
+      {
+        "beverage": {
+          "name": "wine",
+          "volume": 2.0,
+          "percentage": 11.5,
+          "color": "#7a121f",
+          "volumeSuffix": "dl"
+        },
+        "time": "2022-04-29 12:35"
+      },
+      {
+        "beverage": {
+          "name": "beer",
+          "volume": 0.3,
+          "percentage": 4.7,
+          "color": "#d9cf34",
+          "volumeSuffix": "l"
+        },
+        "time": "2022-04-29 12:55"
       }
     ]
   }

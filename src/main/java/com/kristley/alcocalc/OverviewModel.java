@@ -4,47 +4,35 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.kristley.alcocalc.NightsManager.*;
 
 public class OverviewModel {
-    public double calculateAbsoluteVolume() {
+    public String calculateAbsoluteVolumeString(List<SerializableDrink> drinks) {
         double vol = 0;
         for (SerializableDrink sd :
-                getNight().getSerializableDrinks()) {
+                drinks) {
             vol += calculateAbsoluteVolumeOfBeverage(sd.getBeverage());
         }
-        return vol;
+        return String.format("%.1f", vol) + "ml";
     }
 
     private double calculateAbsoluteVolumeOfBeverage(Beverage beverage) {
-        double multiplier;
-        switch (beverage.getVolumeSuffix()){
-            case "l":
-                multiplier = 1000;
-                break;
-            case "dl":
-                multiplier = 100;
-                break;
-            case "cl":
-                multiplier = 10;
-                break;
-            case "ml":
-                multiplier = 1;
-                break;
-            default:
-                throw new IllegalStateException();
-        }
+        double multiplier = switch (beverage.getVolumeSuffix()) {
+            case "l" -> 1000;
+            case "dl" -> 100;
+            case "cl" -> 10;
+            case "ml" -> 1;
+            default -> throw new IllegalStateException();
+        };
         return multiplier * beverage.getVolume() * beverage.getPercentage() / 100;
     }
 
-    public String calculateDrinkingTime() {
+    public String calculateDrinkingTime(List<SerializableDrink> drinks, Night night) {
 
-        List<SerializableDrink> drinks = getNight().getSerializableDrinks();
         if (drinks.size() == 0){
             return "0:0";
         }
         String end = drinks.get(drinks.size()-1).getTime();
-        String start = getNight().getDate();
+        String start = night.getDate();
 
         LocalDateTime endTime = DateTimeHelper.timeFromString(end);
         LocalDateTime startTime = DateTimeHelper.timeFromString(start);

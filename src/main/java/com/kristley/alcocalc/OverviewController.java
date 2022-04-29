@@ -7,7 +7,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
@@ -18,23 +17,23 @@ import java.util.List;
 public class OverviewController {
 
     @FXML
-    public Pane backButton;
+    protected Pane backButton;
     @FXML
-    public Pane forwardButton;
+    protected Pane forwardButton;
     @FXML
-    public Button addButton;
+    protected Button addButton;
     @FXML
     protected TableView<Drink> historyTable;
     @FXML
-    public TableColumn<Drink, String> colTime;
+    protected TableColumn<Drink, String> colTime;
     @FXML
-    public TableColumn<Drink, String>colBeverage;
+    protected TableColumn<Drink, String>colBeverage;
     @FXML
-    public TableColumn<Drink, Double> colVolume;
+    protected TableColumn<Drink, Double> colVolume;
     @FXML
-    public TableColumn<Drink, Double> colPercentage;
+    protected TableColumn<Drink, Double> colPercentage;
     @FXML
-    public TableColumn<Drink, String> colColor;
+    protected TableColumn<Drink, String> colColor;
     @FXML
     protected Text absoluteVolBox, drinkingTimeBox;
 
@@ -63,8 +62,9 @@ public class OverviewController {
     }
 
     private void fillOverview() {
-        absoluteVolBox.setText(model.calculateAbsoluteVolume() + "ml");
-        drinkingTimeBox.setText(model.calculateDrinkingTime());
+        List<SerializableDrink> drinks = NightsManager.getNight().getSerializableDrinks();
+        absoluteVolBox.setText(model.calculateAbsoluteVolumeString(drinks));
+        drinkingTimeBox.setText(model.calculateDrinkingTime(drinks, NightsManager.getNight()));
     }
 
     private void fillTable() {
@@ -89,24 +89,26 @@ public class OverviewController {
     }
     @FXML
     protected void onAddButtonClicked(){
-        SceneManager.loadSceneFromResource("addBeverage-view.fxml");
+        if (NightsManager.currentNightIsToday())
+            SceneManager.loadSceneFromResource("addBeverage-view.fxml");
     }
 
-    public void onBackButtonPressed(MouseEvent mouseEvent) {
+
+    @FXML
+    protected void onBackButtonPressed(MouseEvent mouseEvent) {
         if(!model.canGoBack()){
             return;
         }
-        System.out.println("backbutton");
         model.goBack();
         fillInData();
     }
 
-    public void onForwardButtonPressed(MouseEvent mouseEvent) {
+    @FXML
+    protected void onForwardButtonPressed(MouseEvent mouseEvent) {
         if(!model.canGoForward()){
             //todo hide
             return;
         }
-        System.out.println("forwardbutton");
         model.goForward();
         fillInData();
     }

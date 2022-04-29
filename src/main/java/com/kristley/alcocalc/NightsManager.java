@@ -1,13 +1,5 @@
 package com.kristley.alcocalc;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
-
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -16,54 +8,43 @@ import java.util.List;
 
 public class NightsManager {
     private static NightsManager instance;
-    private static String filename;
-    private Night currentNight;
     private List<Night> nights = new ArrayList<>();
-    private int index;
+    private int index = -1;
     private Night tonight;
+    private FileHandler fileHandler;
 
     public NightsManager(String filename) {
         instance = this;
-        instance.filename = filename;
+
+        fileHandler = new FileHandler(filename);
         initializeNightsFromFile();
     }
 
     private static void initializeNightsFromFile() {
-        Gson gson = new Gson();
-        JsonReader reader;
-        try {
-            reader = new JsonReader(new FileReader(filename));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        List<Night> nights = gson.fromJson(reader, new TypeToken<List<Night>>() {
-        }.getType());
+        List<Night> nights = instance.fileHandler.getNightsFromSaveFile();
         instance.nights = nights == null ? new ArrayList<>() : nights;
     }
 
-    public static void addDrinkToNight(SerializableDrink drink) throws IOException {
-        instance.currentNight.add(drink);
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        System.out.println(instance.nights.size());
-        for (SerializableDrink sd :
-                getLatestNight().getSerializableDrinks()) {
-            System.out.println(sd.getBeverageName());
-        }
-        FileWriter writer = new FileWriter(instance.filename);
+    public static void addDrinkToCurrentNight(SerializableDrink drink) throws IOException {
+        getNight().add(drink);
 
-        gson.toJson(instance.nights, new TypeToken<List<Night>>() {
-        }.getType(), writer);
-        writer.flush();
-        writer.close();
+        instance.fileHandler.SaveNights(instance.nights);
     }
 
+
     public static Night getNight() {
-        return instance.currentNight;
+        if(instance.index < 0){
+            return null;
+        }
+        return instance.nights.get(instance.index);
     }
 
 
     public static void updateCurrentNightToTonight() {
         LocalDateTime now = LocalDateTime.now();
+        if (getLatestNight()== null) {
+            instance.nights.add(new Night(LocalDateTime.now()));
+        }
         LocalDateTime startOfNight = DateTimeHelper.timeFromString(getLatestNight().getDate());
         Duration duration = Duration.between(startOfNight, now);
 
@@ -72,15 +53,22 @@ public class NightsManager {
             instance.nights.add(new Night(LocalDateTime.now()));
         }
         instance.setNight(instance.nights.size() - 1);
+        instance.tonight = getNight();
+    }
+
+    public static int getAmountOfNights() {
+        return instance.nights.size();
     }
 
 
     private void setNight(int i) {
         instance.index = i;
-        instance.currentNight = instance.nights.get(i);
     }
 
     private static Night getLatestNight() {
+        if (instance.nights.size() == 0){
+            return null;
+        }
         return instance.nights.get(instance.nights.size() - 1);
     }
 
@@ -90,23 +78,11 @@ public class NightsManager {
     }
 
     public static boolean hasFutureNight() {
-        try{
-            instance.nights.get(instance.index + 1);
-        }
-        catch (Exception e){
-            return false;
-        }
-        return true;
+        return instance.nights.size() - 1 > instance.index;
     }
 
     public static boolean hasPastNight() {
-        try{
-            instance.nights.get(instance.index - 1);
-        }
-        catch (Exception e){
-            return false;
-        }
-        return true;
+        return instance.index > 0;
     }
 
     public static void goToPastNight() {
@@ -117,6 +93,6 @@ public class NightsManager {
     }
 
     public static boolean currentNightIsToday(){
-        return instance.tonight == instance.currentNight;
+        return instance.tonight == getNight();
     }
 }

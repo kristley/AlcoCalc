@@ -16,17 +16,16 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class AddBeverageController {
     @FXML
-    public TextField volumeField, percentageField, beverageNameField;
+    private TextField volumeField, percentageField, beverageNameField;
     @FXML
-    public ColorPicker colorPickerField;
+    private ColorPicker colorPickerField;
     @FXML
-    public Text volumeSuffix, timeBox;
+    private Text volumeSuffix, timeBox;
     @FXML
-    public Button addButton;
+    private Button addButton;
 
     ObservableList<String> unitChoicesList = FXCollections.observableArrayList("ml", "cl", "dl", "l");
     @FXML
@@ -40,7 +39,6 @@ public class AddBeverageController {
 
     private void validateInput() {
         if (!hasValidInput()){
-            //Todo add button dysfunctional
             addButton.setOpacity(0.5);
             return;
         }
@@ -48,20 +46,9 @@ public class AddBeverageController {
     }
 
     private boolean hasValidInput() {
-        try {
-            double d = Double.parseDouble(volumeField.getText());
-            double d2 = Double.parseDouble(percentageField.getText());
-
-        } catch (NumberFormatException e) {
-            return false;
-        }
-
-        if (beverageNameField.getText().length() < 1)
-            return false;
-        if (colorPickerField.getValue() == Color.BLACK)
-            return false;
-        return true;
+        return model.hasValidInput(beverageNameField.getText(), volumeField.getText(), percentageField.getText());
     }
+
 
     @FXML
     private void initialize(){
@@ -69,27 +56,28 @@ public class AddBeverageController {
         unitChoiceBox.setValue("l");
         unitChoiceBox.setOnAction(actionEvent -> updatePromptText());
 
+        initTimeBox();
 
-
-        timeBox.setText(getCurrentTime());
-
-        percentageField.textProperty().addListener(this::OnInputFieldsChanged);
-        beverageNameField.textProperty().addListener(this::OnInputFieldsChanged);
-        volumeField.textProperty().addListener(this::OnInputFieldsChanged);
+        setListeners();
 
         updatePromptText();
         validateInput();
     }
 
-    private void updatePromptText() {
-        volumeSuffix.setText((String) unitChoiceBox.getValue());
-    }
-
-    private String getCurrentTime() {
-
+    private void initTimeBox() {
         LocalDateTime now = LocalDateTime.now();
         timeStamp = DateTimeHelper.timeStringFromDate(now);
-        return now.format(DateTimeFormatter.ofPattern("HH:mm"));
+        timeBox.setText(DateTimeHelper.getTime(now));
+    }
+
+    private void setListeners() {
+        percentageField.textProperty().addListener(this::OnInputFieldsChanged);
+        beverageNameField.textProperty().addListener(this::OnInputFieldsChanged);
+        volumeField.textProperty().addListener(this::OnInputFieldsChanged);
+    }
+
+    private void updatePromptText() {
+        volumeSuffix.setText((String) unitChoiceBox.getValue());
     }
 
     @FXML
@@ -104,21 +92,18 @@ public class AddBeverageController {
         }
         Beverage beverage = GetBeverageFromFields();
         model.add(beverage, timeStamp);
-        SceneManager.loadSceneFromResource("alcoCalc-view.fxml");
     }
 
     private Beverage GetBeverageFromFields() {
-        String hex8 = Integer.toHexString(colorPickerField.getValue().hashCode());
-        String color = "#" + hex8.substring(0, 6);
-
-        String beverageName = beverageNameField.getText();
-        Double volume = Double.parseDouble(volumeField.getText());
-        Double percentage = Double.parseDouble(percentageField.getText());
-        String suffix = volumeSuffix.getText();
-        return new Beverage(beverageName, volume, suffix, percentage, color);
+        return model.GetBeverageFromFields(beverageNameField.getText(),
+                volumeField.getText(),
+                (String)unitChoiceBox.getValue(),
+                percentageField.getText(),
+                colorPickerField.getValue().hashCode());
     }
 
-    public void onFillInFromPrefab(MouseEvent mouseEvent) {
+    @FXML
+    protected void onFillInFromPrefab(MouseEvent mouseEvent) {
         Pane pane = (Pane) mouseEvent.getSource();
         Text bevName = (Text) getByUserData(pane, "0");
         Text volume = (Text) getByUserData(pane, "1");

@@ -8,8 +8,8 @@ public class Night {
     private String date;
     private List<SerializableDrink> history;
 
-    public Night(LocalDateTime now){
-        date = DateTimeHelper.timeStringFromDate(now);
+    public Night(LocalDateTime dateTime){
+        date = DateTimeHelper.timeStringFromDate(dateTime);
         history = new ArrayList<>();
     }
 

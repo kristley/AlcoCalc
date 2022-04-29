@@ -9,7 +9,7 @@ import java.io.IOException;
 public class Application extends javafx.application.Application {
     @Override
     public void start(Stage stage) throws IOException {
-        new NightsManager("F:/Coding/University/OOP - Java/AlcoCalc/src/main/java/com/kristley/alcocalc/nights.json");
+        new NightsManager("src/main/resources/com/kristley/alcocalc/nights.json");
 
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("alcoCalc-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 335, 600);
@@ -24,4 +24,3 @@ public class Application extends javafx.application.Application {
         launch();
     }
 }
-

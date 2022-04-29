@@ -1,0 +1,237 @@
+[
+  {
+    "date": "2022-04-23 17:02",
+    "history": [
+      {
+        "beverage": {
+          "name": "beer",
+          "volume": 0.5,
+          "percentage": 4.7,
+          "color": "#E8AA32",
+          "volumeSuffix": "l"
+        },
+        "time": "2022-04-23 17:14"
+      },
+      {
+        "beverage": {
+          "name": "beer",
+          "volume": 0.5,
+          "percentage": 4.7,
+          "color": "#E8AA32",
+          "volumeSuffix": "l"
+        },
+        "time": "2022-04-23 17:00"
+      },
+      {
+        "beverage": {
+          "name": "beer",
+          "volume": 0.5,
+          "percentage": 4.7,
+          "color": "#E8AA32",
+          "volumeSuffix": "l"
+        },
+        "time": "2022-04-23 17:49"
+      },
+      {
+        "beverage": {
+          "name": "wine",
+          "volume": 2.0,
+          "percentage": 11.5,
+          "color": "#7a121f",
+          "volumeSuffix": "l"
+        },
+        "time": "2022-04-29 00:30"
+      }
+    ]
+  },
+  {
+    "date": "2022-04-23 17:02",
+    "history": [
+      {
+        "beverage": {
+          "name": "beer",
+          "volume": 0.5,
+          "percentage": 4.7,
+          "color": "#E8AA32",
+          "volumeSuffix": "l"
+        },
+        "time": "2022-04-23 17:14"
+      },
+      {
+        "beverage": {
+          "name": "beer",
+          "volume": 0.5,
+          "percentage": 4.7,
+          "color": "#E8AA32",
+          "volumeSuffix": "l"
+        },
+        "time": "2022-04-23 17:49"
+      },
+      {
+        "beverage": {
+          "name": "wine",
+          "volume": 2.0,
+          "percentage": 11.5,
+          "color": "#7a121f",
+          "volumeSuffix": "l"
+        },
+        "time": "2022-04-29 00:30"
+      }
+    ]
+  },
+  {
+    "date": "2022-04-28 23:55",
+    "history": [
+      {
+        "beverage": {
+          "name": "cider",
+          "volume": 0.5,
+          "percentage": 4.7,
+          "color": "#127a6e",
+          "volumeSuffix": "l"
+        },
+        "time": "2022-04-29 23:59"
+      },
+      {
+        "beverage": {
+          "name": "wine",
+          "volume": 2.0,
+          "percentage": 11.5,
+          "color": "#7a121f",
+          "volumeSuffix": "dl"
+        },
+        "time": "2022-04-29 01:23"
+      },
+      {
+        "beverage": {
+          "name": "shot",
+          "volume": 4.0,
+          "percentage": 40.0,
+          "color": "#6635ce",
+          "volumeSuffix": "cl"
+        },
+        "time": "2022-04-29 01:44"
+      },
+      {
+        "beverage": {
+          "name": "beer",
+          "volume": 0.5,
+          "percentage": 4.7,
+          "color": "#d9a932",
+          "volumeSuffix": "l"
+        },
+        "time": "2022-04-29 01:45"
+      },
+      {
+        "beverage": {
+          "name": "beer",
+          "volume": 0.3,
+          "percentage": 4.7,
+          "color": "#d9cf34",
+          "volumeSuffix": "l"
+        },
+        "time": "2022-04-29 03:06"
+      },
+      {
+        "beverage": {
+          "name": "beer",
+          "volume": 0.5,
+          "percentage": 4.7,
+          "color": "#d9a932",
+          "volumeSuffix": "l"
+        },
+        "time": "2022-04-29 12:30"
+      },
+      {
+        "beverage": {
+          "name": "shot",
+          "volume": 4.0,
+          "percentage": 40.0,
+          "color": "#6635ce",
+          "volumeSuffix": "cl"
+        },
+        "time": "2022-04-29 12:30"
+      },
+      {
+        "beverage": {
+          "name": "wine",
+          "volume": 2.0,
+          "percentage": 11.5,
+          "color": "#7a121f",
+          "volumeSuffix": "dl"
+        },
+        "time": "2022-04-29 12:35"
+      },
+      {
+        "beverage": {
+          "name": "beer",
+          "volume": 0.3,
+          "percentage": 4.7,
+          "color": "#d9cf34",
+          "volumeSuffix": "l"
+        },
+        "time": "2022-04-29 12:55"
+      },
+      {
+        "beverage": {
+          "name": "beer",
+          "volume": 0.3,
+          "percentage": 4.7,
+          "color": "#d9cf34",
+          "volumeSuffix": "l"
+        },
+        "time": "2022-04-29 16:35"
+      },
+      {
+        "beverage": {
+          "name": "shot",
+          "volume": 4.0,
+          "percentage": 21.5,
+          "color": "#dd72d9",
+          "volumeSuffix": "cl"
+        },
+        "time": "2022-04-29 16:35"
+      },
+      {
+        "beverage": {
+          "name": "beer",
+          "volume": 0.5,
+          "percentage": 4.7,
+          "color": "#d9a932",
+          "volumeSuffix": "l"
+        },
+        "time": "2022-04-29 17:28"
+      },
+      {
+        "beverage": {
+          "name": "beer",
+          "volume": 0.3,
+          "percentage": 4.7,
+          "color": "#d9cf34",
+          "volumeSuffix": "l"
+        },
+        "time": "2022-04-29 18:10"
+      },
+      {
+        "beverage": {
+          "name": "beer",
+          "volume": 0.5,
+          "percentage": 4.7,
+          "color": "#d9a932",
+          "volumeSuffix": "l"
+        },
+        "time": "2022-04-29 18:22"
+      },
+      {
+        "beverage": {
+          "name": "wine",
+          "volume": 2.0,
+          "percentage": 11.5,
+          "color": "#7a121f",
+          "volumeSuffix": "dl"
+        },
+        "time": "2022-04-29 19:16"
+      }
+    ]
+  }
+]
