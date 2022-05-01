@@ -1,11 +1,15 @@
 package com.kristley.alcoCalc.testing;
 
-import com.kristley.alcocalc.*;
-import org.junit.jupiter.api.*;
+import com.kristley.alcocalc.Beverage;
+import com.kristley.alcocalc.DateTimeHelper;
+import com.kristley.alcocalc.NightsManager;
+import com.kristley.alcocalc.SerializableDrink;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
 
 public class SavingLoadingTests {
     private static Beverage beverage;
@@ -37,6 +41,20 @@ public class SavingLoadingTests {
         NightsManager.updateCurrentNightToTonight();
         Assertions.assertTrue(NightsManager.getNight().getSerializableDrinks().size() > 0, "Loaded Nights from file");
         deleteFile(file);
+    }
+
+
+    @Test
+    void deletesEmptyNight() throws IOException {
+        File file = getNewSaveFile();
+        new NightsManager(file.getAbsolutePath());
+        NightsManager.updateCurrentNightToTonight();
+        NightsManager.saveNights();
+        Assertions.assertEquals(1, NightsManager.getAmountOfNights());
+        new NightsManager(file.getAbsolutePath());
+        Assertions.assertEquals(1, NightsManager.getAmountOfNights());
+        NightsManager.deleteEmptyNight();
+        Assertions.assertEquals(0, NightsManager.getAmountOfNights());
     }
 
     @Test

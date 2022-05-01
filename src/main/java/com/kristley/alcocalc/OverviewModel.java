@@ -2,6 +2,7 @@ package com.kristley.alcocalc;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -40,6 +41,43 @@ public class OverviewModel {
         Duration duration = Duration.between(startTime, endTime);
 
         return duration.toHoursPart() + ":" + duration.toMinutesPart();
+    }
+
+    public String getCurrentDate() {
+        if (NightsManager.currentNightIsTonight()){
+            return "Tonight";
+        }
+        LocalDateTime date = DateTimeHelper.timeFromString(NightsManager.getNight().getDate());
+        int nightYear = date.getYear();
+        int currentYear = LocalDateTime.now().getYear();
+        return currentYear == nightYear
+                ? DateTimeHelper.prettyMonthDayStringFromDate(date)
+                : DateTimeHelper.prettyDateStringFromDate(date);
+    }
+
+    public void tryLoadAddMenu() {
+        if (NightsManager.currentNightIsTonight())
+            SceneManager.loadSceneFromResource("addBeverage-view.fxml");
+    }
+
+    public List<Drink> getDrinks(){
+        List<Drink> drinks = new ArrayList<>();
+        for (SerializableDrink serializableDrink : NightsManager.getNight().getSerializableDrinks()) {
+            drinks.add(new Drink(serializableDrink));
+        }
+        return drinks;
+    }
+
+    public boolean nightIsTonight() {
+        return NightsManager.currentNightIsTonight();
+    }
+
+    public void setUpNight() {
+        NightsManager.updateCurrentNightToTonight();
+    }
+
+    public Night getNight() {
+        return NightsManager.getNight();
     }
 
     public boolean canGoForward() {

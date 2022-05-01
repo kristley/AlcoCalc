@@ -18,7 +18,7 @@ public class FileHandler {
         this.filename = filename;
     }
 
-    public void SaveNights(List<Night> nights) throws IOException {
+    public void saveNights(List<Night> nights) throws IOException {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         FileWriter writer = new FileWriter(filename);
 

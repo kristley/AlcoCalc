@@ -12,7 +12,6 @@ public class NightsManager {
     private int index = -1;
     private Night tonight;
     private FileHandler fileHandler;
-
     public NightsManager(String filename) {
         instance = this;
 
@@ -28,7 +27,11 @@ public class NightsManager {
     public static void addDrinkToCurrentNight(SerializableDrink drink) throws IOException {
         getNight().add(drink);
 
-        instance.fileHandler.SaveNights(instance.nights);
+        saveNights();
+    }
+
+    public static void saveNights() throws IOException {
+        instance.fileHandler.saveNights(instance.nights);
     }
 
 
@@ -41,19 +44,31 @@ public class NightsManager {
 
 
     public static void updateCurrentNightToTonight() {
-        LocalDateTime now = LocalDateTime.now();
-        if (getLatestNight()== null) {
+        if (getLatestNight() == null || !latestNightIsCurrentNight()) {
             instance.nights.add(new Night(LocalDateTime.now()));
         }
-        LocalDateTime startOfNight = DateTimeHelper.timeFromString(getLatestNight().getDate());
-        Duration duration = Duration.between(startOfNight, now);
 
-        //Probably should only add new Night if user is writing to file, but it's fine for demo
-        if (!isSameNight(now, startOfNight, duration)) {
-            instance.nights.add(new Night(LocalDateTime.now()));
-        }
         instance.setNight(instance.nights.size() - 1);
         instance.tonight = getNight();
+    }
+    private static boolean latestNightIsCurrentNight(){
+        Night latestNight = getLatestNight();
+        if (latestNight == null){
+            return true;
+        }
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfNight = DateTimeHelper.timeFromString(latestNight.getDate());
+        SerializableDrink latestDrink = latestNight.getLatestDrink();
+        LocalDateTime lastDrinkTime = null;
+        if (latestDrink != null){
+            lastDrinkTime = DateTimeHelper.timeFromString(latestDrink.getTime());
+        }
+        return (latestDrink == null || isSameNight(now, startOfNight, lastDrinkTime)) && isSameNight(now, startOfNight);
+    }
+
+    private static boolean isSameNight(LocalDateTime now, LocalDateTime startOfNight, LocalDateTime lastDrink) {
+        Duration duration = Duration.between(lastDrink, now);
+        return isSameNight(now, startOfNight) && duration.toHours() < 6;
     }
 
     public static int getAmountOfNights() {
@@ -72,11 +87,12 @@ public class NightsManager {
         return instance.nights.get(instance.nights.size() - 1);
     }
 
-    private static boolean isSameNight(LocalDateTime now, LocalDateTime startOfNight, Duration duration) {
-        return duration.toHours() < 25 && (startOfNight.getDayOfMonth() == now.getDayOfMonth() ||
+
+    private static boolean isSameNight(LocalDateTime now, LocalDateTime startOfNight) {
+        Duration duration = Duration.between(startOfNight, now);
+        return duration.toHours() <= 24 && (startOfNight.getDayOfMonth() == now.getDayOfMonth() ||
                 now.getDayOfMonth() - startOfNight.getDayOfMonth() == 1);
     }
-
     public static boolean hasFutureNight() {
         return instance.nights.size() - 1 > instance.index;
     }
@@ -88,11 +104,35 @@ public class NightsManager {
     public static void goToPastNight() {
         instance.setNight(--instance.index);
     }
+
     public static void goToFutureNight() {
         instance.setNight(++instance.index);
     }
-
-    public static boolean currentNightIsToday(){
+    public static boolean currentNightIsTonight(){
         return instance.tonight == getNight();
+    }
+
+    public static void deleteEmptyNight(){
+        if (instance.tonight == null){
+            Night latestNight = getLatestNight();
+            if (latestNight == null){
+                return;
+            }
+            LocalDateTime startOfNight = DateTimeHelper.timeFromString(latestNight.getDate());
+            if (isSameNight(LocalDateTime.now(), startOfNight)) {
+                instance.tonight = latestNight;
+            }
+            else {
+                return;
+            }
+        }
+        if (instance.tonight.getSerializableDrinks().size() == 0){
+            instance.nights.remove(instance.nights.size() - 1);
+            try {
+                saveNights();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

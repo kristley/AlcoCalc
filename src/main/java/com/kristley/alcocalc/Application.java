@@ -18,6 +18,7 @@ public class Application extends javafx.application.Application {
         stage.setResizable(false);
         stage.show();
         new SceneManager(stage, scene);
+        stage.setOnCloseRequest(event -> NightsManager.deleteEmptyNight());
     }
 
     public static void main(String[] args) {

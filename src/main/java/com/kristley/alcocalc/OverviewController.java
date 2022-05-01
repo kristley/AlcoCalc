@@ -7,11 +7,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class OverviewController {
@@ -47,36 +45,42 @@ public class OverviewController {
     private void initialize(){
         model = new OverviewModel();
         setUpTableFactories();
-        NightsManager.updateCurrentNightToTonight();
+        model.setUpNight();
         fillInData();
     }
+
 
     private void fillInData() {
         fillTable();
         fillOverview();
-        hideAddButton(!NightsManager.currentNightIsToday());
+        toggleAddButtonVisibility(!model.nightIsTonight());
+        toggleBackAndForwardVisibility();
+        updateDateText();
     }
 
-    private void hideAddButton(boolean b) {
+    private void toggleBackAndForwardVisibility() {
+        backButton.setOpacity(model.canGoBack() ? 1 : 0);
+        forwardButton.setOpacity(model.canGoForward() ? 1 : 0);
+    }
+
+    private void updateDateText() {
+        dateText.setText(model.getCurrentDate());
+    }
+
+    private void toggleAddButtonVisibility(boolean b) {
         addButton.setOpacity(b ? 0 : 1);
     }
 
     private void fillOverview() {
-        List<SerializableDrink> drinks = NightsManager.getNight().getSerializableDrinks();
+        Night night = model.getNight();
+        List<SerializableDrink> drinks = night.getSerializableDrinks();
         absoluteVolBox.setText(model.calculateAbsoluteVolumeString(drinks));
-        drinkingTimeBox.setText(model.calculateDrinkingTime(drinks, NightsManager.getNight()));
+        drinkingTimeBox.setText(model.calculateDrinkingTime(drinks, night));
     }
 
     private void fillTable() {
-        historyTable.setItems(getDrinks());
-    }
-
-    private ObservableList<Drink> getDrinks() {
-        List<Drink> drinks = new ArrayList<>();
-        for (SerializableDrink serializableDrink : NightsManager.getNight().getSerializableDrinks()) {
-            drinks.add(new Drink(serializableDrink));
-        }
-        return FXCollections.observableArrayList(drinks);
+        ObservableList<Drink> drinks = FXCollections.observableArrayList(model.getDrinks());
+        historyTable.setItems(drinks);
     }
 
     private void setUpTableFactories() {
@@ -89,13 +93,12 @@ public class OverviewController {
     }
     @FXML
     protected void onAddButtonClicked(){
-        if (NightsManager.currentNightIsToday())
-            SceneManager.loadSceneFromResource("addBeverage-view.fxml");
+        model.tryLoadAddMenu();
     }
 
 
     @FXML
-    protected void onBackButtonPressed(MouseEvent mouseEvent) {
+    protected void onBackButtonPressed() {
         if(!model.canGoBack()){
             return;
         }
@@ -104,9 +107,8 @@ public class OverviewController {
     }
 
     @FXML
-    protected void onForwardButtonPressed(MouseEvent mouseEvent) {
+    protected void onForwardButtonPressed() {
         if(!model.canGoForward()){
-            //todo hide
             return;
         }
         model.goForward();

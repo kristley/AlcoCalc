@@ -233,5 +233,40 @@
         "time": "2022-04-29 19:16"
       }
     ]
+  },
+  {
+    "date": "2022-05-01 22:18",
+    "history": [
+      {
+        "beverage": {
+          "name": "wine",
+          "volume": 2.0,
+          "percentage": 11.5,
+          "color": "#7a121f",
+          "volumeSuffix": "dl"
+        },
+        "time": "2022-05-01 22:18"
+      },
+      {
+        "beverage": {
+          "name": "beer",
+          "volume": 0.3,
+          "percentage": 4.7,
+          "color": "#d9cf34",
+          "volumeSuffix": "l"
+        },
+        "time": "2022-05-02 01:08"
+      },
+      {
+        "beverage": {
+          "name": "beer",
+          "volume": 0.5,
+          "percentage": 4.7,
+          "color": "#d9a932",
+          "volumeSuffix": "l"
+        },
+        "time": "2022-05-02 01:08"
+      }
+    ]
   }
 ]

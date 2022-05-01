@@ -24,4 +24,8 @@ public class Night {
     public void add(SerializableDrink drink){
         history.add(drink);
     }
+
+    public SerializableDrink getLatestDrink() {
+        return null;
+    }
 }
