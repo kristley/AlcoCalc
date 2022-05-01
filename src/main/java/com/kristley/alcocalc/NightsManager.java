@@ -11,7 +11,7 @@ public class NightsManager {
     private List<Night> nights = new ArrayList<>();
     private int index = -1;
     private Night tonight;
-    private FileHandler fileHandler;
+    private final FileHandler fileHandler;
     public NightsManager(String filename) {
         instance = this;
 
@@ -25,7 +25,8 @@ public class NightsManager {
     }
 
     public static void addDrinkToCurrentNight(SerializableDrink drink) throws IOException {
-        getNight().add(drink);
+        updateCurrentNightToTonight();
+        instance.tonight.add(drink);
 
         saveNights();
     }
@@ -114,17 +115,7 @@ public class NightsManager {
 
     public static void deleteEmptyNight(){
         if (instance.tonight == null){
-            Night latestNight = getLatestNight();
-            if (latestNight == null){
-                return;
-            }
-            LocalDateTime startOfNight = DateTimeHelper.timeFromString(latestNight.getDate());
-            if (isSameNight(LocalDateTime.now(), startOfNight)) {
-                instance.tonight = latestNight;
-            }
-            else {
-                return;
-            }
+            if (!latestNightIsTonight()) return;
         }
         if (instance.tonight.getSerializableDrinks().size() == 0){
             instance.nights.remove(instance.nights.size() - 1);
@@ -134,5 +125,20 @@ public class NightsManager {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private static boolean latestNightIsTonight() {
+        Night latestNight = getLatestNight();
+        if (latestNight == null){
+            return false;
+        }
+        LocalDateTime startOfNight = DateTimeHelper.timeFromString(latestNight.getDate());
+        if (isSameNight(LocalDateTime.now(), startOfNight)) {
+            instance.tonight = latestNight;
+        }
+        else {
+            return false;
+        }
+        return true;
     }
 }
